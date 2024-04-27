@@ -1,19 +1,24 @@
-def function(a: 'integer[]', N: 'integer') -> 'integer':
-    palo: 'integer'
-    dado: 'integer'
-    i: 'integer'
-    palo = -1
-    dado = -1
-    i = -1
-    print(dado)
-    print("Hello World!")
-    while i <= N:
-        if a[i] % 2 == 0:
-            if a[i] > palo:
-                palo = a[i]
+def retrieval(Intent: 'str', Response: 'str') -> 'str[]':
+    ChunkStorage: 'str[]'
+
+    if isRT(Intent, Response):
+        Append(ChunkStorage, Response)
+        return ChunkStorage
+
+    ParaChunks = ParaChunking(Response)
+    ParaIndex = 0
+    while ParaIndex<len(ParaChunks):
+        ParaChunk = ParaChunks[ParaIndex]
+        if isRT(Intent, ParaChunk):
+            Append(ChunkStorage, ParaChunk)
         else:
-            if a[i] > dado:
-                dado = a[i]
-        i = i + 1
-        
-    return palo + dado
+            SentChunks = SentChunking(ParaChunk)
+            SentIndex = 0
+            while SentIndex<len(SentChunks):
+                SentChunk = SentChunks[SentIndex]
+                if isRT(Intent, SentChunk):
+                    Append(ChunkStorage, SentChunk)
+                SentIndex += 1
+        ParaIndex += 1
+
+    return ChunkStorage
